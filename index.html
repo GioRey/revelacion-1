@@ -50,6 +50,18 @@
             background: rgba(0,0,0,0.15);
             margin: 0 auto;
         }
+        
+        /* Scrollbar personalizada y sutil para la tarjeta */
+        .card-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .card-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .card-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(0,0,0,0.1);
+            border-radius: 20px;
+        }
     </style>
 </head>
 <body>
@@ -59,27 +71,27 @@
         const { useState, useEffect } = React;
         const { motion, AnimatePresence } = window.Motion;
 
-        // --- ✏️ EDITA TUS DATOS AQUÍ ---
+        // --- ✏️ DATOS ---
         const DATA = {
             parents: "Guadalupe y Martin",
             dateLarge: "6 DIC",
             year: "2025",
             time: "6:00 PM",
             placeName: "Casa de la mamá",
-            address: "Cda.del Pino 14, Cdad. López Mateos, Estado de México",
-            whatsapp: "525578107519", 
+            address: "Cda.del Pino 14, Cdad. López Mateos, Edo. Méx",
+            whatsapp: "525512345678", 
             mapLink: "https://maps.app.goo.gl/qzjYWB5WNRY7yVmh8"
         };
 
         // --- ÍCONOS SVG ---
-        const IconMap = () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>;
-        const IconCal = () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>;
+        const IconMap = () => <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>;
+        const IconCal = () => <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>;
         const IconWA = () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>;
 
         const App = () => {
-            const [stage, setStage] = useState('intro'); // intro -> game -> vote -> revealing -> card
+            const [stage, setStage] = useState('intro'); 
             const [score, setScore] = useState(0);
-            const [vote, setVote] = useState(null); // 'boy' or 'girl'
+            const [vote, setVote] = useState(null); 
             const TARGET = 6;
 
             const handleGameWin = () => {
@@ -88,7 +100,6 @@
 
             const handleVote = (selection) => {
                 setVote(selection);
-                // Feedback de voto
                 confetti({
                     particleCount: 30,
                     spread: 50,
@@ -98,7 +109,6 @@
                 
                 setTimeout(() => {
                     setStage('revealing');
-                    // Gran explosión final
                     setTimeout(() => {
                         setStage('card');
                         const end = Date.now() + 2000;
@@ -112,7 +122,7 @@
             };
 
             return (
-                <div className="w-full h-screen bg-gradient-move relative flex flex-col items-center justify-center overflow-hidden">
+                <div className="w-full h-[100dvh] bg-gradient-move relative flex flex-col items-center justify-center overflow-hidden">
                     <AnimatePresence mode="wait">
                         {stage === 'intro' && <Intro key="intro" onStart={() => setStage('game')} />}
                         {stage === 'game' && <Game key="game" score={score} setScore={setScore} target={TARGET} onWin={handleGameWin} />}
@@ -124,7 +134,6 @@
             );
         };
 
-        // 1. PANTALLA DE INTRO
         const Intro = ({ onStart }) => (
             <motion.div 
                 initial={{opacity:0, scale:0.8}} animate={{opacity:1, scale:1}} exit={{opacity:0, y:-100}}
@@ -139,7 +148,6 @@
             </motion.div>
         );
 
-        // 2. EL JUEGO DE GLOBOS
         const Game = ({ score, setScore, target, onWin }) => {
             const [balloons, setBalloons] = useState(Array.from({length:10}, (_,i)=>({id:i, x:Math.random()*80+10, s:Math.random()*3+5, d:Math.random()*2, c:Math.random()>.5?'bg-blue-400':'bg-pink-400'})));
             
@@ -174,7 +182,6 @@
             );
         };
 
-        // 3. PANTALLA DE VOTACIÓN (EL TWIST)
         const VoteScreen = ({ onVote }) => (
             <motion.div 
                 initial={{scale:0.5, opacity:0}} animate={{scale:1, opacity:1}} exit={{scale:1.5, opacity:0}}
@@ -200,7 +207,6 @@
             </motion.div>
         );
 
-        // 4. TRANSICIÓN CON MENSAJE
         const TransitionScreen = ({ vote }) => (
             <motion.div 
                 initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
@@ -214,75 +220,77 @@
             </motion.div>
         );
 
-        // 5. LA TARJETA FINAL (DISEÑO PREMIUM)
+        // --- TARJETA FINAL RESPONSIVA ---
         const FinalCard = ({ data, vote }) => (
             <motion.div 
-                initial={{y:100, opacity:0}} animate={{y:0, opacity:1}} transition={{type:"spring", bounce:0.4}}
-                className="w-full max-w-sm px-4 z-40 h-[85vh] flex items-center"
+                initial={{y:50, opacity:0}} animate={{y:0, opacity:1}} transition={{type:"spring", bounce:0.4}}
+                // Centrado flex para garantizar que esté en medio
+                className="w-full max-w-sm px-4 z-40 flex items-center justify-center h-full py-4"
             >
-                <div className="bg-white w-full rounded-[2rem] shadow-2xl overflow-hidden relative flex flex-col">
-                    {/* Header Decorativo */}
-                    <div className="h-32 bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 relative">
-                        <div className="absolute -bottom-10 left-0 w-full flex justify-center">
-                            <div className="w-20 h-20 bg-white rounded-full p-1 shadow-lg flex items-center justify-center text-4xl z-10">
+                {/* Altura máxima para que quepa en pantallas pequeñas y scroll si es necesario */}
+                <div className="bg-white w-full rounded-[2rem] shadow-2xl overflow-hidden relative flex flex-col max-h-[90vh]" style={{maxHeight: '85dvh'}}> 
+                    
+                    {/* Header Decorativo: Reducido un poco la altura */}
+                    <div className="h-24 shrink-0 bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 relative">
+                        <div className="absolute -bottom-8 left-0 w-full flex justify-center">
+                            <div className="w-16 h-16 bg-white rounded-full p-1 shadow-lg flex items-center justify-center text-3xl z-10">
                                 👶
                             </div>
                         </div>
-                        {/* Patrón de lunares */}
                         <div className="absolute inset-0 opacity-20" style={{backgroundImage: 'radial-gradient(#fff 2px, transparent 2px)', backgroundSize: '10px 10px'}}></div>
                     </div>
 
-                    {/* Contenido */}
-                    <div className="pt-12 pb-6 px-6 text-center flex-1 flex flex-col gap-4">
-                        <div>
-                            <p className="text-xs font-bold tracking-[0.2em] text-slate-400 uppercase mb-1">Estás invitado a la</p>
-                            <h1 className="text-4xl font-fun text-slate-800 leading-none mb-1">Revelación de Género</h1>
-                            <h2 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-pink-500">{data.parents}</h2>
+                    {/* Contenido Scrollable */}
+                    <div className="pt-10 pb-4 px-5 text-center flex-1 flex flex-col gap-3 overflow-y-auto card-scroll">
+                        <div className="shrink-0">
+                            <p className="text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase mb-1">Estás invitado al</p>
+                            <h1 className="text-3xl font-fun text-slate-800 leading-none mb-1">Revelación de Género</h1>
+                            <h2 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-pink-500 leading-tight">{data.parents}</h2>
                         </div>
 
-                        {/* Bloque de Fecha/Hora */}
-                        <div className="bg-slate-50 rounded-2xl p-4 flex items-center justify-between border border-slate-100">
+                        {/* Fecha/Hora Compacto */}
+                        <div className="bg-slate-50 rounded-xl p-3 flex items-center justify-between border border-slate-100 shrink-0">
                             <div className="text-left">
-                                <div className="flex items-center gap-2 text-slate-400 mb-1">
-                                    <IconCal /> <span className="text-xs font-bold uppercase">Fecha</span>
+                                <div className="flex items-center gap-1 text-slate-400 mb-1">
+                                    <IconCal /> <span className="text-[10px] font-bold uppercase">Fecha</span>
                                 </div>
-                                <p className="font-bold text-slate-800 text-xl">{data.dateLarge}</p>
-                                <p className="text-xs text-slate-500">{data.year}</p>
+                                <p className="font-bold text-slate-800 text-lg leading-none">{data.dateLarge}</p>
+                                <p className="text-[10px] text-slate-500">{data.year}</p>
                             </div>
-                            <div className="h-10 w-[1px] bg-slate-200"></div>
+                            <div className="h-8 w-[1px] bg-slate-200"></div>
                             <div className="text-right">
-                                <div className="flex items-center gap-2 justify-end text-slate-400 mb-1">
-                                    <span className="text-xs font-bold uppercase">Hora</span> <IconCal /> 
+                                <div className="flex items-center gap-1 justify-end text-slate-400 mb-1">
+                                    <span className="text-[10px] font-bold uppercase">Hora</span> <IconCal /> 
                                 </div>
-                                <p className="font-bold text-slate-800 text-xl">{data.time}</p>
-                                <p className="text-xs text-slate-500">Recepción</p>
+                                <p className="font-bold text-slate-800 text-lg leading-none">{data.time}</p>
+                                <p className="text-[10px] text-slate-500">Recepción</p>
                             </div>
                         </div>
 
-                        {/* Bloque de Lugar */}
-                        <div className="text-left px-2">
+                        {/* Lugar Compacto */}
+                        <div className="text-left px-2 shrink-0">
                             <div className="flex items-center gap-2 text-slate-400 mb-1">
-                                <IconMap /> <span className="text-xs font-bold uppercase">Ubicación</span>
+                                <IconMap /> <span className="text-[10px] font-bold uppercase">Ubicación</span>
                             </div>
-                            <p className="font-bold text-slate-800 text-lg">{data.placeName}</p>
-                            <p className="text-sm text-slate-500 mb-2">{data.address}</p>
-                            <a href={data.mapLink} target="_blank" className="inline-block text-xs font-bold text-blue-500 border border-blue-200 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors">
+                            <p className="font-bold text-slate-800 text-base leading-tight">{data.placeName}</p>
+                            <p className="text-xs text-slate-500 mb-2 leading-tight">{data.address}</p>
+                            <a href={data.mapLink} target="_blank" className="inline-block text-[10px] font-bold text-blue-500 border border-blue-200 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors">
                                 Ver en Mapa ➜
                             </a>
                         </div>
 
-                        {/* Dress Code & Voto */}
-                        <div className="bg-slate-50 rounded-xl p-3 border border-dashed border-slate-300 text-sm text-slate-600">
+                        {/* Dress Code Compacto */}
+                        <div className="bg-slate-50 rounded-xl p-2 border border-dashed border-slate-300 text-xs text-slate-600 shrink-0">
                             <p className="mb-1">Tu intuición dice: <strong className={vote==='boy'?'text-blue-500':'text-pink-500'}>{vote === 'boy' ? 'NIÑO' : 'NIÑA'}</strong></p>
-                            <p className="font-bold text-base my-1 text-slate-700">
+                            <p className="font-bold text-sm my-0.5 text-slate-700">
                                 {vote === 'boy' ? '¡Te toca traer toallitas! 🛁' : '¡Te toca traer pañales! 👶🏻'}
                             </p>
-                            <p className="text-xs text-slate-400">¡Viste de ese color para la fiesta!</p>
+                            <p className="text-[10px] text-slate-400">¡Viste de ese color para la fiesta!</p>
                         </div>
 
-                        {/* Botón Confirmar */}
+                        {/* Botón Confirmar visible siempre */}
                         <a href={`https://wa.me/${data.whatsapp}?text=Hola! Confirmo mi asistencia al Gender Reveal. Soy Team ${vote === 'boy' ? 'Niño' : 'Niña'}!`} 
-                           className="mt-auto bg-slate-900 text-white w-full py-4 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-2 hover:bg-slate-800 active:scale-95 transition-all">
+                           className="mt-auto bg-slate-900 text-white w-full py-3 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 hover:bg-slate-800 active:scale-95 transition-all shrink-0 mb-1">
                             <IconWA /> Confirmar Asistencia
                         </a>
                     </div>
